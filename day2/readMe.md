@@ -1,4 +1,4 @@
-1. 随mac 起一个python 简单服务
+1.随mac 起一个python 简单服务
  * python -m SimpleHTTPServer 3333
 
 2.下载 ngrok 远端穿透本地服务
@@ -9,5 +9,5 @@
  * 使用 lt --subdomain 你临时的二级域名 --port 3333
  * 结果映射到 https://你临时的二级域名.localtunnel.me/
 
-4. 安装koa后,起node服务
+4.安装koa后,起node服务
  * node --harmony app.js
