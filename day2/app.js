@@ -20,7 +20,7 @@ var config = {
         appSecret:'3a289a4245eb47e6ff13a20d86f9a5c2',
         token:'woshiryan',
         getAccessToken:function() {
-            console.log( 'rrr:', fs.existsSync( wechat_file ) );
+            console.log( 'wechat_file:', fs.existsSync( wechat_file ) );
             if ( !fs.existsSync( wechat_file ) ) {
                 writeFileAsync( wechat_file, '' );
             };
@@ -35,9 +35,12 @@ var config = {
 
 var app = new Koa();
 
-console.log( 'app:', app );
+var generator = Generator( config.wechat )
 
-app.use( Generator( config.wechat ) );
+console.log( 'app:', app );
+//console.log( 'generator:', generator );
+
+app.use( generator );
 
 app.listen( port );
 console.log( 'listening:', port );

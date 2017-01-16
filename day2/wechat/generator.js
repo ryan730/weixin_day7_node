@@ -4,75 +4,10 @@
 'use strict'
 
 var sha1 = require( 'sha1' );
-var Promise = require( 'bluebird' );//参考:https://my.oschina.net/goskyblue/blog/534634
-var Request = Promise.promisify( require( 'request' ) );
+var Wechat = require( './wechat.js' );
+var util = require( './util.js' );
 
-var prefix =  'https://api.weixin.qq.com/cgi-bin/token';
-var api = {
-    accessToken: prefix + '?grant_type=client_credential'
-};
-
-function Wechat( opts ) {
-    var that = this;
-    this.appID = opts.appID;
-    this.appSecret = opts.appSecret;
-    this.getAccessToken = opts.getAccessToken;
-    this.saveAccessToken = opts.saveAccessToken;
-
-    this.getAccessToken()
-        .then( function( data ) {
-            try {
-                data = JSON.parse( data );
-            }catch ( e ) {
-                return that.updateAccessToken();
-            }
-            if ( that.isValidAccessToken( data ) ) {
-                return Promise.resolve( data );
-            }else {
-                return that.updateAccessToken();
-            }
-        } )
-        .then( function( data ) {
-            that.access_token = data.access_token;
-            that.expires_in = data.expires_in;
-            that.saveAccessToken( data );
-        } );
-}
-
-Wechat.prototype.isValidAccessToken = function( data ) {
-    if ( !data || !data.access_token || !data.expires_in ) {
-        return false;
-    }
-    var access_token = data.access_token;
-    var expires_in = data.expires_in;
-    var now = ( new Date().getTime() );
-
-    if ( now < expires_in ) {
-        return true;
-    }else {
-        return false;
-    }
-};
-
-Wechat.prototype.updateAccessToken = function( opts ) {
-    var appID = this.appID;
-    var appSecret = this.appSecret;
-    var url = api.accessToken +
-        '&appid=' + appID +
-        '&secret=' + appSecret;
-    console.log( '提交的请求:', url );
-    return new Promise( function( resolve, reject ) {
-        Request( { url:url, json:true } ).then( function( response ) {
-            console.log( 'response:', response.body );
-            var data = response.body;
-            var now = ( new Date().getTime() );
-            var expires_in = now + ( data.expires_in - 20 ) * 1000;
-            data.expires_in = expires_in;
-            resolve( data );
-        } );
-    } );
-
-};
+var getRawBody = require('raw-body');
 
 module.exports = function( opts ) {
     var wechat = new Wechat( opts );
@@ -90,19 +25,56 @@ module.exports = function( opts ) {
 
         console.log( 'sha:', sha );
         console.log( 'signature:', signature );
+        console.log( 'method:', this.method );
         if ( this.method === 'GET' ) {
             if ( sha === signature ) {//本地服务拼接与微信远端吻合
                 this.body = echostr + '';
             }else {
-                this.body = 'wrong';
+                this.body = 'wrong22';
             }
+            return false;
         }
         if ( this.method === 'POST' ) {
             if ( sha !== signature ) {//本地服务拼接与微信远端吻合
                 this.body = 'wrong';
                 return false;
-            }else {
+            }
+        }
 
+        var data = yield getRawBody(this.req, {//buffer转字符(xml)
+            length:this.length,
+            limit:'1mb',
+            encoding:this.charset
+        })
+
+        var content = yield util.parseXMLAsync(data);//xml 转 json
+
+        var message = yield util.formatMessage(content.xml);//xml 转 json
+
+        //console.log('this.req:',this.req)
+        //console.log('this.req:',data);
+        //console.log('data.toString:',data.toString());
+        console.log('message:',message);
+        console.log('message:',message.MsgType);
+        console.log('message:',message.Event);
+
+        if(message.MsgType === 'event') {
+            if(message.Event === 'subscribe') {
+                var now = new Date().getTime();
+                this.status = 200;
+                this.type = 'application/xml';
+
+                var reply = '<xml>\
+                    <ToUserName><![CDATA['+message.FromUserName+']]></ToUserName>\
+                    <FromUserName><![CDATA['+message.ToUserName+']]></FromUserName>\
+                    <CreateTime>'+now+'</CreateTime>\
+                    <MsgType><![CDATA['+'text'+']]></MsgType>\
+                    <Content><![CDATA['+'我是ryan! hello'+']]></Content>\
+                    </xml>';
+
+                console.log('body:',reply);
+                this.body = reply;
+                return false;
             }
         }
 
