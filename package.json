@@ -1,0 +1,19 @@
+{
+  "name": "node7day",
+  "version": "1.0.0",
+  "description": "7day do weixin by node",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "day1": "clear & node --harmony day1/app.js & lt --subdomain ryanwx --port 1234",
+    "day2": "clear & kill -9 `lsof -i tcp:1234` & node --harmony day2/app.js & lt --subdomain ryanwx --port 1234"
+  },
+  "author": "ryan.zhu",
+  "license": "ISC",
+  "devDependencies": {
+    "bluebird": "^3.4.7",
+    "koa": "^1.2.4",
+    "request": "^2.79.0",
+    "sha1": "^1.1.1"
+  }
+}
