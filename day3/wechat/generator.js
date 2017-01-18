@@ -51,32 +51,18 @@ module.exports = function( opts ) {
 
         var message = yield util.formatMessage( content.xml );//xml 转 json
 
+        this.message =  message;
+
+        yield handler.call( this, next );
+
+        wechat.reply.call( this );
+
         //console.log('this.req:',this.req)
         //console.log('this.req:',data);
         //console.log('data.toString:',data.toString());
         console.log( 'message:', message );
         console.log( 'message:', message.MsgType );
         console.log( 'message:', message.Event );
-
-        if ( message.MsgType === 'event' ) {
-            if ( message.Event === 'subscribe' ) {
-                var now = new Date().getTime();
-                this.status = 200;
-                this.type = 'application/xml';
-
-                var reply = '<xml>\
-                    <ToUserName><![CDATA[' + message.FromUserName + ']]></ToUserName>\
-                    <FromUserName><![CDATA[' + message.ToUserName + ']]></FromUserName>\
-                    <CreateTime>' + now + '</CreateTime>\
-                    <MsgType><![CDATA[' + 'text' + ']]></MsgType>\
-                    <Content><![CDATA[' + '我是ryan! hello' + ']]></Content>\
-                    </xml>';
-
-                console.log( 'body:', reply );
-                this.body = reply;
-                return false;
-            }
-        }
 
     };
 };
