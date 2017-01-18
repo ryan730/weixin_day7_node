@@ -16,5 +16,5 @@ console.log( 'app:', app );
 
 app.use( generator );
 
-app.listen( port );
-console.log( 'listening:', port );
+app.listen( config.port );
+console.log( 'listening:', config.port );

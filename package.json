@@ -8,8 +8,8 @@
     "day1": "clear & node --harmony day1/app.js & lt --subdomain ryanwx --port 1234",
     "day2": "clear & kill -9 `lsof -i tcp:1234` & node --harmony day2/app.js & lt --subdomain ryanwx --port 1234",
     "day3": "clear & kill -9 `lsof -i tcp:1234` & node --harmony day3/app.js & lt --subdomain ryanwx --port 1234",
-    "day2-p": "clear & kill -9 `lsof -i tcp:1234` & pm2 start day2/app.js -i 1 & lt --subdomain ryanwx --port 1234",
-    "day2-r": "pm2 reload day2/app.js"
+    "day-p": "clear & kill -9 `lsof -i tcp:1234` & pm2 start day3/app.js -i 1 & lt --subdomain ryanwx --port 1234",
+    "day-r": "pm2 reload day3/app.js"
   },
   "author": "ryan.zhu",
   "license": "ISC",

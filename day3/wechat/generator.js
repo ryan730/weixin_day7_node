@@ -9,8 +9,9 @@ var util = require( './util.js' );
 
 var getRawBody = require( 'raw-body' );
 
-module.exports = function( opts ) {
+module.exports = function( opts ,handler) {
     var wechat = new Wechat( opts );
+    //yield getRawBody->yield util.parseXMLAsync->yield util.formatMessage->yield weixin()->wechat.reply()
     return function *( next ) {
         console.log( this.query );
         var token = opts.token;
@@ -60,9 +61,7 @@ module.exports = function( opts ) {
         //console.log('this.req:',this.req)
         //console.log('this.req:',data);
         //console.log('data.toString:',data.toString());
-        console.log( 'message:', message );
-        console.log( 'message:', message.MsgType );
-        console.log( 'message:', message.Event );
+        //console.log( 'message:', message );
 
     };
 };

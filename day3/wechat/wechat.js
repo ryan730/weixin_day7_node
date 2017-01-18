@@ -3,7 +3,7 @@
  */
 var Promise = require( 'bluebird' );//参考:https://my.oschina.net/goskyblue/blog/534634
 var Request = Promise.promisify( require( 'request' ) );
-var util = require('./util');
+var util = require( './util' );
 
 var prefix =  'https://api.weixin.qq.com/cgi-bin/token';
 var api = {
@@ -73,14 +73,15 @@ Wechat.prototype.updateAccessToken = function( opts ) {
 };
 
 Wechat.prototype.reply = function() {
-    var content = this.body;
+    var content = this.content;
     var message = this.message;
 
-    var xml = util.tpl(content, message);
+    var xml = util.tpl( content, message );
 
     this.status = 200;
     this.type = 'application/xml';
     this.body = xml;
-}
+    console.log( 'this.body:', content, this.body );
+};
 
-module.exports=Wechat;
+module.exports = Wechat;

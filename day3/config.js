@@ -9,8 +9,8 @@ var wechat_file = path.join( __dirname, './config/wechat.txt' );
 var writeFileAsync = Promise.promisify( fs.writeFile );
 var readFileAsync = Promise.promisify( fs.readFile );
 
-var port = 1234;
 var config = {
+    port : 1234,
     wechat:{
         appID:'wxf848d9d2a2aac359',
         appSecret:'3a289a4245eb47e6ff13a20d86f9a5c2',
@@ -28,3 +28,5 @@ var config = {
         }
     }
 };
+
+exports = module.exports = config;
