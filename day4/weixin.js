@@ -70,6 +70,25 @@ exports.reply = function *( next ) {
                 mediaId:data.media_id
             };
             this.content = reply;
+        }else if ( message.Content === '6' ) {
+            var data = yield wechatApi.uploadMaterial( 'video', __dirname + '/2.mp4' );
+            var reply = {
+                type:'video',
+                title:'回复视频',
+                description:'一段视频',
+                mediaId:data.media_id
+            };
+            this.content = reply;
+        }else if ( message.Content === '7' ) {
+            var data = yield wechatApi.uploadMaterial( 'image', __dirname + '/2.jpg' );
+            var reply = {
+                type:'music',
+                title:'回复音乐',
+                description:'一段视频',
+                musicUrl:'http://yinyueshiting.baidu.com/data2/music/122873158/49046814400128.mp3?xcode=a6006b0c745741dd35dc224202a6daff',
+                thumbMediaId:data.media_id
+            };
+            this.content = reply;
         }else {
             this.content = '你说的是:' + message.Content;
 
