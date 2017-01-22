@@ -5,11 +5,13 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "day1": "clear & node --harmony day1/app.js & lt --subdomain ryanwx --port 1234",
+    "main": "node --harmony main.js",
+    "day": "clear & node --harmony day1/app.js & lt --subdomain ryanwx --port 1234",
     "day2": "clear & kill -9 `lsof -i tcp:1234` & node --harmony day2/app.js & lt --subdomain ryanwx --port 1234",
     "day3": "clear & kill -9 `lsof -i tcp:1234` & node --harmony day3/app.js & lt --subdomain ryanwx --port 1234",
-    "day-p": "clear & kill -9 `lsof -i tcp:1234` & pm2 start day3/app.js -i 1 & lt --subdomain ryanwx --port 1234",
-    "day-r": "pm2 reload day3/app.js"
+    "day4": "clear & kill -9 `lsof -i tcp:1234` & node --harmony day4/app.js & lt --subdomain ryanwx --port 1234",
+    "dp-p": "clear & kill -9 `lsof -i tcp:1234` & pm2 start main.js -i 1 & lt --subdomain ryanwx --port 1234",
+    "dp-r": "pm2 reload main.js"
   },
   "author": "ryan.zhu",
   "license": "ISC",
