@@ -89,6 +89,64 @@ exports.reply = function *( next ) {
                 thumbMediaId:data.media_id
             };
             this.content = reply;
+        }else if ( message.Content === '8' ) {//下面都是永久素材上传
+            var data = yield wechatApi.uploadMaterial( 'image', __dirname + '/2.jpg', { type:'image' } );
+            var reply = {
+                type:'image',
+                mediaId:data.media_id
+            };
+            this.content = reply;
+        }else if ( message.Content === '9' ) {
+            var data = yield wechatApi.uploadMaterial( 'video', __dirname + '/2.mp4', { type:'video', description:JSON.stringify( { title:'title', introduction:'introduction' } ) } );
+            var reply = {
+                type:'video',
+                title:'回复视频',
+                description:'一段视频',
+                mediaId:data.media_id
+            };
+            this.content = reply;
+        }else if ( message.Content === '10' ) {
+            var picData = yield wechatApi.uploadMaterial( 'image', __dirname + '/2.jpg', { type:'image' } );
+            var media = {
+                articles:[
+                    {
+                        title: 'title1',
+                        thumb_media_id: picData.media_id,
+                        author: 'ryan',
+                        disgest: '摘要',
+                        show_cover_pic: 1,
+                        content:'内容',
+                        content_source_url:'https://github.com'
+                    },
+                    {
+                        title: 'title2',
+                        thumb_media_id: picData.media_id,
+                        author: 'ryan',
+                        disgest: '摘要',
+                        show_cover_pic: 1,
+                        content:'内容',
+                        content_source_url:'https://github.com'
+                    } ]
+            };
+
+            data = yield wechatApi.uploadMaterial( 'news', media, {} );
+            console.log( 'content-10-1:', data );
+            data = yield wechatApi.downloadMaterial( data.media_id, 'news', {} );
+            console.log( 'content-10-2:', data );
+
+
+            var items = data.news_item;
+            var news = [];
+            items.forEach( function( item ) {
+                news.push( {
+                    title:item.title,
+                    decription:item.digest,
+                    picUrl:picData.url,
+                    url:item.url
+                } );
+            } );
+
+            this.content = news;
         }else {
             this.content = '你说的是:' + message.Content;
 
